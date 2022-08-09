@@ -12,14 +12,28 @@ var map = new mapboxgl.Map({
  map.on("load", function () {
   map.addLayer(
     {
-      id: "mua",
+      id: "hpsa-outline",
+      type: "line",
+      source: {
+        type: "geojson",
+        data: "nyc-hpsa.geojson"
+      },
+      paint: {
+        "line-color": "darkgray",
+        "line-width": 1.5,
+      }
+    }
+  );
+  map.addLayer(
+    {
+      id: "hpsa",
       type: "fill",
       source: {
         type: "geojson",
-        data: "nyc-mua.geojson"
+        data: "nyc-hpsa.geojson"
       },
       paint: {
-        "fill-opacity": 0.75,
+        "fill-opacity": 0.6,
         "fill-color": ["interpolate",
         ["linear"],
         ["get", "pct_change"],
@@ -43,14 +57,14 @@ var map = new mapboxgl.Map({
   );
   map.addLayer(
     {
-      id: "non-mua",
+      id: "non-hpsa",
       type: "fill",
       source: {
         type: "geojson",
-        data: "nyc-non-mua.geojson"
+        data: "nyc-non-hpsa.geojson"
       },
       paint: {
-        "fill-opacity": 0.75,
+        "fill-opacity": 0.6,
         "fill-color": ["interpolate",
         ["linear"],
         ["get", "pct_change"],
@@ -71,40 +85,40 @@ var map = new mapboxgl.Map({
         ],
       }
     },
-    "mua"
+    "hpsa"
   );
   
 
-map.on("mouseleave", "mua", function () {
+map.on("mouseleave", "hpsa", function () {
 map.getCanvas().style.cursor = "";
 });
 
-map.on("mouseleave", "non-mua", function () {
+map.on("mouseleave", "non-hpsa", function () {
 map.getCanvas().style.cursor = "";
 });
 
-map.on("mouseenter", "mua", function () {
+map.on("mouseenter", "hpsa", function () {
   map.getCanvas().style.cursor = "pointer";
   });
   
-map.on("mouseenter", "non-mua", function () {
+map.on("mouseenter", "non-hpsa", function () {
   map.getCanvas().style.cursor = "pointer";
   });
 
-map.on("click", "mua", function (e) {
+map.on("click", "hpsa", function (e) {
   var pharmacies22 = e.features[0].properties.num_pharmacies_2022;
   var pharmacies17 = e.features[0].properties.num_pharmacies_2017;
   var countyName = e.features[0].properties.county_name;
   new mapboxgl.Popup()
     .setLngLat(e.lngLat)
     .setHTML(
-      "<p>Among <span style='font-weight:bold;'>medically underserved areas </span>in "
+      "<p>Among areas like this one where vulnerable populations <span style='font-weight:bold;'>face a physician shortage </span>in "
       +
       "<span style='font-weight:bold;'>" 
       +
       countyName
       +
-      "</span> like this one, there were " 
+      "</span>, there were " 
       +
       "<span style='font-weight:bold;'>"
       +
@@ -121,20 +135,20 @@ map.on("click", "mua", function (e) {
     .addTo(map);
   });
 
-map.on("click", "non-mua", function (e) {
+map.on("click", "non-hpsa", function (e) {
   var pharmacies22 = e.features[0].properties.num_pharmacies_2022;
   var pharmacies17 = e.features[0].properties.num_pharmacies_2017;
   var countyName = e.features[0].properties.county_name;
   new mapboxgl.Popup()
     .setLngLat(e.lngLat)
     .setHTML(
-      "<p>Among areas <span style='font-weight:bold;'>not medically underserved </span>in "
+      "<p>Among areas like this one <span style='font-weight:bold;'>not facing a physician shortage </span>in "
       +
       "<span style='font-weight:bold;'>" 
       +
       countyName
       +
-      "</span> like this one, there were " 
+      "</span>, there were " 
       +
       "<span style='font-weight:bold;'>"
       +
